@@ -1,5 +1,14 @@
 import axios from "axios";
-import { useCookies, Cookies } from "react-cookie";
+import Cookies from "js-cookie";
+import { getTokenFromCookie, getAppUserId } from "./cookie";
+
+export type User = {
+  email?: String;
+  password?: String;
+  firstName?: String;
+  lastName?: String;
+};
+
 const baseUrl: string = "http://localhost:1221";
 
 const path = () => {
@@ -8,35 +17,30 @@ const path = () => {
     login: "/api/v1/login",
     users: "/api/v1/users",
     auth: "/api/v1/auth",
+    updateRole: "/api/v1/update/role",
   };
 };
 
-const getCookies = () => {
-  const cookies = document.cookie.split(";");
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    // Check if this cookie contains the name we are looking for
-    if (cookie.startsWith("authToken" + "=")) {
-      // Get the value of the cookie and decode it
-      const cookieValue = decodeURIComponent(cookie.substring(10));
-      return cookieValue;
+const api = axios.create({
+  baseURL: baseUrl, // Replace with your API endpoint
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+api.interceptors.request.use(
+  (config) => {
+    const token = getTokenFromCookie();
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
-    return null;
-  }
-};
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
-const getHeaders = () => {
-  const token = getCookies();
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
-export type User = {
-  email?: String;
-  password?: String;
-  firstName?: String;
-  lastName?: String;
-};
 export const userLogin = async (body: User) => {
   return await axios.post(baseUrl + path().login, body).then((res: any) => {
     return res.data;
@@ -63,10 +67,13 @@ export const getUserAuth = async (headers: any) => {
 };
 
 export const getUsersList = async () => {
-  const headers = await getHeaders();
-  return await axios
-    .get(baseUrl + path().users, { headers })
-    .then((res: any) => {
-      return res?.data;
-    });
+  const userId = getAppUserId();
+  return api.get(path().users + "/" + userId).then((res) => res.data);
+};
+
+export const updateUserRole = async (role: string) => {
+  const userId = getAppUserId();
+  return api
+    .post(path().updateRole + "/" + userId, { role })
+    .then((res) => res.data);
 };

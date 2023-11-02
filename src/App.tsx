@@ -1,7 +1,6 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { SideBar } from "./layouts/SideBar";
 import "./styles/tailwind.css";
 import styled from "styled-components";
 import LoginForm from "./components/user/Login";
@@ -12,6 +11,11 @@ import { Dashboard } from "./pages/Dashboard";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./services/protectesRoute";
+import { Onboard } from "./pages/Onboard";
+import Profile from "./pages/Profile";
+import RecruiterProfile from "./pages/RecruiterProfile";
+import RecruiterJobs from "./pages/RecruiterJobs";
+import RecruiterCompany from "./pages/RecruiterCompany";
 const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -26,6 +30,15 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/onboard" element={<Onboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/jobs" element={<Profile />} />
+            <Route
+              path="/my-profile/recruiter"
+              element={<RecruiterProfile />}
+            />
+            <Route path="/recruiter/jobs" element={<RecruiterJobs />} />
+            <Route path="/recruiter/company" element={<RecruiterCompany />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

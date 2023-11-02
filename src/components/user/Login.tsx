@@ -24,7 +24,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cookies, setCookie] = useCookies(["authToken", "expiry"]);
+  const [cookies, setCookie] = useCookies(["authToken", "expiry", "appUserId"]);
   const inputHandler = (e: any) => {
     const { name, value } = e.target;
     if (name === "email") setEmail(value);
@@ -49,6 +49,7 @@ export default function LoginForm() {
     console.log("auth", auth);
     setCookie("authToken", auth.accessToken);
     setCookie("expiry", auth.exp);
+    setCookie("appUserId", auth.appUserId);
 
     if (login) {
       toast.success("Login Success", {

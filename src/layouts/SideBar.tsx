@@ -20,26 +20,69 @@ import {
 } from "@heroicons/react/20/solid";
 import Logo from "../assets/logo/png/logo-no-background.png";
 import { getUserAuth, getUsersList } from "../services/user-service";
+import styled from "styled-components";
+import { useNavigate, useLocation } from "react-router-dom";
+import { clearAllCookies } from "../services/cookie";
 
 interface SideBarProps {
   children: ReactNode;
 }
 
+const MainWrapper = styled.div``;
+
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
-export function SideBar({ children }: SideBarProps) {
-  const [user, setUser] = useState(undefined);
-  const navigation = [
+export default function SideBar({ children }: SideBarProps) {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<any>(undefined);
+  const [navigation, setNavigation] = useState<any[]>([]);
+  const onBoard = [
     {
       name: "On Boarding",
-      href: "#",
+      href: "/onboard",
       icon: AccessibilityNewOutlinedIcon,
       current: true,
     },
-    // { name: "My Profile", href: "#", icon: HomeIcon, current: true },
-    // { name: "Jobs", href: "#", icon: UsersIcon, current: false },
-    // { name: "Company", href: "#", icon: FolderIcon, current: false },
+  ];
+  const jobSeeker = [
+    {
+      name: "My Profile",
+      href: "/profile",
+      icon: HomeIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
+    {
+      name: "Jobs",
+      href: "/jobs",
+      icon: UsersIcon,
+      current: false,
+      scopes: ["JOB_SEEKER"],
+    },
+  ];
+  const recruiter = [
+    {
+      name: "My Profile",
+      href: "/my-profile/recruiter",
+      icon: HomeIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
+    {
+      name: "Jobs List",
+      href: "/recruiter/jobs",
+      icon: UsersIcon,
+      current: false,
+      scopes: ["JOB_SEEKER"],
+    },
+    {
+      name: "My company",
+      href: "/recruiter/company",
+      icon: FolderIcon,
+      current: false,
+      scopes: ["RECRUITER"],
+    },
     // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
     // {
     //   name: "Documents",
@@ -49,29 +92,43 @@ export function SideBar({ children }: SideBarProps) {
     // },
     // { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
   ];
-  const teams = [
-    { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-    { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-    { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
-  ];
+
+  const location = useLocation();
+
+  console.log("location", location);
+
   const userNavigation = [
-    { name: "Your profile", href: "#" },
-    { name: "Sign out", href: "#" },
+    { name: "Your profile", href: "profile" },
+    { name: "Sign out", href: "signout" },
   ];
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const getUserDetails = async () => {
     const userdetails = await getUsersList();
     console.log("userdetails", userdetails);
-    if (userdetails?.data) setUser(userdetails?.data?.firstName);
+    if (userdetails?.data) setUser(userdetails?.data);
+
+    if (!userdetails?.data?.role) {
+      setNavigation([...onBoard]);
+      navigate("/onboard");
+    }
+    if (userdetails?.data?.role === "JOB_SEEKER") {
+      setNavigation([...jobSeeker]);
+    }
+    if (userdetails?.data?.role === "RECRUITER") {
+      setNavigation([...recruiter]);
+    }
   };
   useEffect(() => {
     getUserDetails();
   }, []);
 
-  const logout = () => {
-    // Cookies.remove("authToken");
-    // Cookies.remove("expiry");
+  console.log("user?.role", user?.role);
+  const doAction = (type: string) => {
+    if (type === "signout") {
+      clearAllCookies();
+      navigate("/login");
+    }
   };
   return (
     <div>
@@ -132,7 +189,7 @@ export function SideBar({ children }: SideBarProps) {
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                     <div className="flex h-16 shrink-0 items-center">
                       <img
-                        className="h-8 w-auto"
+                        className="h-6 w-auto mx-auto"
                         src={Logo}
                         alt="Your Company"
                       />
@@ -141,12 +198,12 @@ export function SideBar({ children }: SideBarProps) {
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
                           <ul role="list" className="-mx-2 space-y-1">
-                            {navigation.map((item) => (
-                              <li key={item.name}>
+                            {navigation.map((item: any) => (
+                              <li key={item?.name}>
                                 <a
-                                  href={item.href}
+                                  onClick={() => navigate(item?.href)}
                                   className={classNames(
-                                    item.current
+                                    location?.pathname === item?.href
                                       ? "bg-gray-50 text-indigo-600"
                                       : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
@@ -154,7 +211,7 @@ export function SideBar({ children }: SideBarProps) {
                                 >
                                   <item.icon
                                     className={classNames(
-                                      item.current
+                                      location?.pathname === item?.href
                                         ? "text-indigo-600"
                                         : "text-gray-400 group-hover:text-indigo-600",
                                       "h-6 w-6 shrink-0",
@@ -167,38 +224,38 @@ export function SideBar({ children }: SideBarProps) {
                             ))}
                           </ul>
                         </li>
-                        <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Your teams
-                          </div>
-                          <ul role="list" className="-mx-2 mt-2 space-y-1">
-                            {teams.map((team) => (
-                              <li key={team.name}>
-                                <a
-                                  href={team.href}
-                                  className={classNames(
-                                    team.current
-                                      ? "bg-gray-50 text-indigo-600"
-                                      : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                                  )}
-                                >
-                                  <span
-                                    className={classNames(
-                                      team.current
-                                        ? "text-indigo-600 border-indigo-600"
-                                        : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                                      "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
-                                    )}
-                                  >
-                                    {team.initial}
-                                  </span>
-                                  <span className="truncate">{team.name}</span>
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
+                        {/*<li>*/}
+                        {/*  <div className="text-xs font-semibold leading-6 text-gray-400">*/}
+                        {/*    Your teams*/}
+                        {/*  </div>*/}
+                        {/*  <ul role="list" className="-mx-2 mt-2 space-y-1">*/}
+                        {/*    {teams.map((team) => (*/}
+                        {/*      <li key={team.name}>*/}
+                        {/*        <a*/}
+                        {/*          href={team.href}*/}
+                        {/*          className={classNames(*/}
+                        {/*            team.current*/}
+                        {/*              ? "bg-gray-50 text-indigo-600"*/}
+                        {/*              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",*/}
+                        {/*            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",*/}
+                        {/*          )}*/}
+                        {/*        >*/}
+                        {/*          <span*/}
+                        {/*            className={classNames(*/}
+                        {/*              team.current*/}
+                        {/*                ? "text-indigo-600 border-indigo-600"*/}
+                        {/*                : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",*/}
+                        {/*              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",*/}
+                        {/*            )}*/}
+                        {/*          >*/}
+                        {/*            {team.initial}*/}
+                        {/*          </span>*/}
+                        {/*          <span className="truncate">{team.name}</span>*/}
+                        {/*        </a>*/}
+                        {/*      </li>*/}
+                        {/*    ))}*/}
+                        {/*  </ul>*/}
+                        {/*</li>*/}
                         <li className="mt-auto">
                           <a
                             href="#"
@@ -225,18 +282,22 @@ export function SideBar({ children }: SideBarProps) {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              <img className="h-8 w-48" src={Logo} alt="Your Company" />
+              <img
+                className="h-6 w-auto mx-auto"
+                src={Logo}
+                alt="Your Company"
+              />
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
                   <ul role="list" className="-mx-2 space-y-1">
-                    {navigation.map((item) => (
-                      <li key={item.name}>
+                    {navigation.map((item: any) => (
+                      <li key={item?.name}>
                         <a
-                          href={item.href}
+                          onClick={() => navigate(item?.href)}
                           className={classNames(
-                            item.current
+                            location?.pathname === item?.href
                               ? "bg-gray-50 text-indigo-600"
                               : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
@@ -244,51 +305,51 @@ export function SideBar({ children }: SideBarProps) {
                         >
                           <item.icon
                             className={classNames(
-                              item.current
+                              location?.pathname === item?.href
                                 ? "text-indigo-600"
                                 : "text-gray-400 group-hover:text-indigo-600",
                               "h-6 w-6 shrink-0",
                             )}
                             aria-hidden="true"
                           />
-                          {item.name}
+                          {item?.name}
                         </a>
                       </li>
                     ))}
                   </ul>
                 </li>
-                <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
-                  </div>
-                  <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {teams.map((team) => (
-                      <li key={team.name}>
-                        <a
-                          href={team.href}
-                          className={classNames(
-                            team.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                          )}
-                        >
-                          <span
-                            className={classNames(
-                              team.current
-                                ? "text-indigo-600 border-indigo-600"
-                                : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
-                            )}
-                          >
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+                {/*<li>*/}
+                {/*  <div className="text-xs font-semibold leading-6 text-gray-400">*/}
+                {/*    Your teams*/}
+                {/*  </div>*/}
+                {/*  <ul role="list" className="-mx-2 mt-2 space-y-1">*/}
+                {/*    {teams.map((team) => (*/}
+                {/*      <li key={team.name}>*/}
+                {/*        <a*/}
+                {/*          href={team.href}*/}
+                {/*          className={classNames(*/}
+                {/*            team.current*/}
+                {/*              ? "bg-gray-50 text-indigo-600"*/}
+                {/*              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",*/}
+                {/*            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",*/}
+                {/*          )}*/}
+                {/*        >*/}
+                {/*          <span*/}
+                {/*            className={classNames(*/}
+                {/*              team.current*/}
+                {/*                ? "text-indigo-600 border-indigo-600"*/}
+                {/*                : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",*/}
+                {/*              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",*/}
+                {/*            )}*/}
+                {/*          >*/}
+                {/*            {team.initial}*/}
+                {/*          </span>*/}
+                {/*          <span className="truncate">{team.name}</span>*/}
+                {/*        </a>*/}
+                {/*      </li>*/}
+                {/*    ))}*/}
+                {/*  </ul>*/}
+                {/*</li>*/}
                 <li className="mt-auto">
                   <a
                     href="#"
@@ -369,7 +430,7 @@ export function SideBar({ children }: SideBarProps) {
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                         aria-hidden="true"
                       >
-                        {user || "Default Name"}
+                        {user?.firstName}
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"
@@ -391,7 +452,7 @@ export function SideBar({ children }: SideBarProps) {
                         <Menu.Item key={item.name}>
                           {({ active }) => (
                             <a
-                              href={item.href}
+                              onClick={() => doAction(item.href)}
                               className={classNames(
                                 active ? "bg-gray-50" : "",
                                 "block px-3 py-1 text-sm leading-6 text-gray-900",
@@ -410,11 +471,10 @@ export function SideBar({ children }: SideBarProps) {
           </div>
 
           <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{/* Your content */}</div>
+            <div className="px-4 sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>
       </div>
-      {children}
     </div>
   );
 }
