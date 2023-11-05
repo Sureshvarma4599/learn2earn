@@ -17,7 +17,7 @@ import RecruiterProfile from "./pages/RecruiterProfile";
 import RecruiterJobs from "./pages/RecruiterJobs";
 import RecruiterCompany from "./pages/RecruiterCompany";
 import Settings from "./pages/Settings";
-
+import Companies from "./pages/Company";
 const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -34,10 +34,11 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/onboard" element={<Onboard />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/jobs" element={<Profile />} />
+            {/*<Route path="/jobs" element={<Profile />} />*/}
             <Route path="/my-profile/recruiter" element={<Profile />} />
             <Route path="/recruiter/jobs" element={<RecruiterJobs />} />
             <Route path="/recruiter/company" element={<RecruiterCompany />} />
+            <Route path="/companies" element={<Companies />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="/login" element={<Login />} />

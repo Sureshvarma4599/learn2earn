@@ -72,6 +72,13 @@ export default function SideBar({ children }: SideBarProps) {
       current: false,
       scopes: ["JOB_SEEKER"],
     },
+    {
+      name: "Companies",
+      href: "/companies",
+      icon: StoreOutlinedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER"],
+    },
   ];
   const recruiter = [
     {
@@ -219,7 +226,7 @@ export default function SideBar({ children }: SideBarProps) {
                           <ul role="list" className="-mx-2 space-y-1">
                             {navigation.map((item: any) => (
                               <li key={item?.name}>
-                                <a
+                                <p
                                   onClick={() => navigate(item?.href)}
                                   className={classNames(
                                     location?.pathname === item?.href
@@ -238,7 +245,7 @@ export default function SideBar({ children }: SideBarProps) {
                                     aria-hidden="true"
                                   />
                                   {item.name}
-                                </a>
+                                </p>
                               </li>
                             ))}
                           </ul>
@@ -276,7 +283,7 @@ export default function SideBar({ children }: SideBarProps) {
                         {/*  </ul>*/}
                         {/*</li>*/}
                         <li className="mt-auto">
-                          <a
+                          <p
                             onClick={() => navigate("/settings")}
                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                           >
@@ -285,7 +292,7 @@ export default function SideBar({ children }: SideBarProps) {
                               aria-hidden="true"
                             />
                             Settings
-                          </a>
+                          </p>
                         </li>
                       </ul>
                     </nav>
@@ -313,7 +320,7 @@ export default function SideBar({ children }: SideBarProps) {
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item: any) => (
                       <li key={item?.name}>
-                        <a
+                        <p
                           onClick={() => navigate(item?.href)}
                           className={classNames(
                             location?.pathname === item?.href
@@ -332,7 +339,7 @@ export default function SideBar({ children }: SideBarProps) {
                             aria-hidden="true"
                           />
                           {item?.name}
-                        </a>
+                        </p>
                       </li>
                     ))}
                   </ul>
