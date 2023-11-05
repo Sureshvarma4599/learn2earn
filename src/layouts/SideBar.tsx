@@ -24,6 +24,11 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { clearAllCookies } from "../services/cookie";
 
+// icons
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
+import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 interface SideBarProps {
   children: ReactNode;
 }
@@ -47,39 +52,53 @@ export default function SideBar({ children }: SideBarProps) {
   ];
   const jobSeeker = [
     {
+      name: "Dashboard",
+      href: "/",
+      icon: DashboardOutlinedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
+    {
       name: "My Profile",
       href: "/profile",
-      icon: HomeIcon,
+      icon: PermIdentityIcon,
       current: false,
       scopes: ["JOB_SEEKER", "RECRUITER"],
     },
     {
       name: "Jobs",
       href: "/jobs",
-      icon: UsersIcon,
+      icon: WorkOutlineOutlinedIcon,
       current: false,
       scopes: ["JOB_SEEKER"],
     },
   ];
   const recruiter = [
     {
+      name: "Dashboard",
+      href: "/",
+      icon: DashboardOutlinedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
+    {
       name: "My Profile",
       href: "/my-profile/recruiter",
-      icon: HomeIcon,
+      icon: PermIdentityIcon,
       current: false,
       scopes: ["JOB_SEEKER", "RECRUITER"],
     },
     {
       name: "Jobs List",
       href: "/recruiter/jobs",
-      icon: UsersIcon,
+      icon: WorkOutlineOutlinedIcon,
       current: false,
       scopes: ["JOB_SEEKER"],
     },
     {
       name: "My company",
       href: "/recruiter/company",
-      icon: FolderIcon,
+      icon: StoreOutlinedIcon,
       current: false,
       scopes: ["RECRUITER"],
     },
@@ -258,7 +277,7 @@ export default function SideBar({ children }: SideBarProps) {
                         {/*</li>*/}
                         <li className="mt-auto">
                           <a
-                            href="#"
+                            onClick={() => navigate("/settings")}
                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                           >
                             <Cog6ToothIcon
@@ -352,7 +371,7 @@ export default function SideBar({ children }: SideBarProps) {
                 {/*</li>*/}
                 <li className="mt-auto">
                   <a
-                    href="#"
+                    onClick={() => navigate("/settings")}
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                   >
                     <Cog6ToothIcon

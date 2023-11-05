@@ -18,6 +18,9 @@ const path = () => {
     users: "/api/v1/users",
     auth: "/api/v1/auth",
     updateRole: "/api/v1/update/role",
+    updateUserProfile: "/api/v1/add/profile",
+    getUserProfile: "/api/v1/get/profile",
+    getAllCompanies: "/api/v1/get/companies",
   };
 };
 
@@ -76,4 +79,19 @@ export const updateUserRole = async (role: string) => {
   return api
     .post(path().updateRole + "/" + userId, { role })
     .then((res) => res.data);
+};
+
+//user profile
+export const createOrUpdateProfile = async (body: any) => {
+  return api.post(path().updateUserProfile + "/", body).then((res) => res.data);
+};
+
+export const getProfile = async (id: String) => {
+  return api.get(path().getUserProfile + "/" + id).then((res) => res.data);
+};
+
+// companies
+
+export const getAllCompanies = async () => {
+  return api.get(path().getAllCompanies).then((res) => res.data);
 };

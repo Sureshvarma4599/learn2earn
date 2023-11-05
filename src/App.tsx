@@ -16,6 +16,8 @@ import Profile from "./pages/Profile";
 import RecruiterProfile from "./pages/RecruiterProfile";
 import RecruiterJobs from "./pages/RecruiterJobs";
 import RecruiterCompany from "./pages/RecruiterCompany";
+import Settings from "./pages/Settings";
+
 const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -33,12 +35,10 @@ function App() {
             <Route path="/onboard" element={<Onboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/jobs" element={<Profile />} />
-            <Route
-              path="/my-profile/recruiter"
-              element={<RecruiterProfile />}
-            />
+            <Route path="/my-profile/recruiter" element={<Profile />} />
             <Route path="/recruiter/jobs" element={<RecruiterJobs />} />
             <Route path="/recruiter/company" element={<RecruiterCompany />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

@@ -42,16 +42,16 @@ export default function LoginForm() {
 
     const login = await userLogin(body);
     console.log("login", login);
-    const headers = {
-      Authorization: `Bearer ${login?.token}`,
-    };
-    const auth = await getUserAuth(headers);
-    console.log("auth", auth);
-    setCookie("authToken", auth.accessToken);
-    setCookie("expiry", auth.exp);
-    setCookie("appUserId", auth.appUserId);
-
     if (login) {
+      const headers = {
+        Authorization: `Bearer ${login?.token}`,
+      };
+      const auth = await getUserAuth(headers);
+      console.log("auth", auth);
+      setCookie("authToken", auth.accessToken);
+      setCookie("expiry", auth.exp);
+      setCookie("appUserId", auth.appUserId);
+
       toast.success("Login Success", {
         position: "top-right", // Set the position of the toast
         autoClose: 3000, // Close the toast after 3 seconds (optional)
