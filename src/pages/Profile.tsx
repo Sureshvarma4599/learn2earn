@@ -20,6 +20,9 @@ const Cards = styled.div`
   grid-template-rows: auto;
   gap: 8px;
   padding: 8px 0px;
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
 `;
 const ContainerHead = styled.div`
   display: flex;

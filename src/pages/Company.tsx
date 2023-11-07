@@ -32,7 +32,7 @@ export default function Companies() {
             name="search"
           />
         </div>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap justify-around space-x-2">
           {companies?.map((company: any) => (
             <div className="p-4 w-72 rounded-lg bg-white shadow">
               <img

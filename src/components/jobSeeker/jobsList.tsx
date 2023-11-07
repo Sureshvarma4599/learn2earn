@@ -40,7 +40,7 @@ export default function JobsList() {
       {data?.map((item, idx) => (
         <div
           key={idx}
-          className="flex justify-between w-full h-32 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+          className="flex flex-wrap justify-between w-full h-auto overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
         >
           <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left flex">
             <img
