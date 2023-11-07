@@ -9,8 +9,8 @@ export type User = {
   lastName?: String;
 };
 
-const baseUrl: string = "http://localhost:1221";
-
+// const baseUrl: string = "http://localhost:1221";
+const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
 const path = () => {
   return {
     signUp: "/api/v1/signup",
