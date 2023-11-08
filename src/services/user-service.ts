@@ -21,6 +21,7 @@ const path = () => {
     updateUserProfile: "/api/v1/add/profile",
     getUserProfile: "/api/v1/get/profile",
     getAllCompanies: "/api/v1/get/companies",
+    storeFileToS3: "/api/v1/upload/s3",
   };
 };
 
@@ -94,4 +95,12 @@ export const getProfile = async (id: String) => {
 
 export const getAllCompanies = async () => {
   return api.get(path().getAllCompanies).then((res) => res.data);
+};
+
+//aws s3 gives url in return
+
+export const getImageUrl = async (file: FormData) => {
+  return axios
+    .post(baseUrl + path().storeFileToS3, file)
+    .then((res) => res.data);
 };

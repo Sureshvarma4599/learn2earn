@@ -49,11 +49,18 @@ export default function ProfileHeader({ setOpenProfile, data }: any) {
           <div className="sm:flex sm:items-center sm:justify-between">
             <div className="sm:flex sm:space-x-5">
               <div className="flex-shrink-0">
-                <img
-                  className="mx-auto h-20 w-20 rounded-full border-2 border-indigo-600"
-                  src={user.imageUrl}
-                  alt=""
-                />
+                {data?.profilePicture ? (
+                  <img
+                    className="mx-auto h-20 w-20 rounded-full border-2 border-indigo-600 object-cover"
+                    src={data?.profilePicture}
+                    alt=""
+                  />
+                ) : (
+                  <div className="h-20 w-20 rounded-full border-2 bg-red-300 text-4xl text-rose-400 p-4">
+                    {data?.firstName?.charAt(0).toUpperCase() +
+                      data?.lastName?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
               <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
                 <p className="text-sm font-medium text-gray-600">

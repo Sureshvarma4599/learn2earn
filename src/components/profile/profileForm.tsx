@@ -7,11 +7,13 @@ import {
   createOrUpdateProfile,
   getProfile,
   getAllCompanies,
+  getImageUrl,
 } from "../../services/user-service";
 import Select from "react-select";
 import moment from "moment";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import axios from "axios";
 
 interface ProfileFormProps {
   type: string; // Update the type to the appropriate type, e.g., string, or a custom type.
@@ -76,6 +78,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
     certification: [],
   });
 
+  // this state works only for uploading and reset
+  const [profilePicture, setProfilePicture] = useState<any>(null);
+
   const options = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
@@ -90,6 +95,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       ...formData, // Create a copy of the existing state
       [name]: value, // Update the firstName property
     });
+  };
+
+  const handleProfilePicture = (e: any) => {
+    const files = e.target.files[0];
+    setProfilePicture(files);
+    console.log(files, "files");
   };
 
   const handleChangeExperience = (e: any) => {
@@ -218,11 +229,24 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   }, []);
 
   const saveForm = async () => {
+    console.log("files", profilePicture);
+    let profileUrl: any;
+
+    setProfilePicture(null);
     const payload: any = formData;
     payload["appUserId"] = await getAppUserId();
     payload["experiences"] = allExperiences;
     payload["certification"] = allCertification;
     payload["education"] = allEducation;
+    if (profilePicture) {
+      const fileData = new FormData();
+      fileData.append("file", profilePicture);
+      console.log("formData", fileData);
+      console.log("formData2", profilePicture);
+      const respUrl = await getImageUrl(fileData);
+      console.log("respUrl", respUrl);
+      payload["profilePicture"] = respUrl.url;
+    }
     console.log("save form data", payload);
     const formResposne = await createOrUpdateProfile(payload);
     console.log("formResposne", formResposne);
@@ -324,15 +348,22 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                       <span>Upload a file</span>
                       <input
                         id="file-upload"
-                        name="file-upload"
+                        name="profilePicture"
                         type="file"
                         className="sr-only"
+                        onChange={handleProfilePicture}
                       />
                     </label>
                     <p className="pl-1">or drag and drop</p>
                   </div>
                   <p className="text-xs leading-5 text-gray-600">
                     PNG, JPG, GIF up to 10MB
+                  </p>
+                  <p className="text-xs leading-5 text-indigo-600">
+                    {" "}
+                    {profilePicture && profilePicture?.name
+                      ? profilePicture?.name
+                      : ""}
                   </p>
                 </div>
               </div>
