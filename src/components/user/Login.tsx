@@ -13,7 +13,7 @@ import {
 import { toast } from "react-toastify";
 
 const RegistrationCard = styled.div`
-  width: 480px;
+  min-width: 280px;
   height: auto;
   margin: auto;
   margin-top: 84px;
