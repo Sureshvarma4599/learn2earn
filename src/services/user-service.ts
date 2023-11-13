@@ -9,8 +9,8 @@ export type User = {
   lastName?: String;
 };
 
-const baseUrl: string = "http://localhost:1221";
-// const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
+// const baseUrl: string = "http://localhost:1221";
+const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
 const path = () => {
   return {
     signUp: "/api/v1/signup",
@@ -25,6 +25,11 @@ const path = () => {
     createJob: "/api/v1/create/job",
     getJobsCreatedByMe: "/api/v1/get/jobsPostedBy",
     getJobById: "/api/v1/get/jobById",
+    getAllActiveJobs: "/api/v1/get/allJobs",
+    applyJob: "/api/v1/job/apply",
+    removeApply: "/api/v1/job/revert",
+    addToFavJob: "/api/v1/job/fav",
+    removeFav: "/api/v1/job/unfav",
   };
 };
 
@@ -106,8 +111,25 @@ export const getJobsCreatedByMe = async () => {
     .then((res: any) => res?.data);
 };
 
+export const getAllActiveJobs = async () => {
+  return api.get(path().getAllActiveJobs).then((res: any) => res?.data);
+};
+
 export const getJobById = async (id: any) => {
   return api.get(path().getJobById + "/" + id).then((res: any) => res?.data);
+};
+
+export const applyJobApp = async (body: any) => {
+  return api.post(path().applyJob, body).then((res: any) => res?.data);
+};
+export const removeJobApp = async (body: any) => {
+  return api.post(path().removeApply, body).then((res: any) => res?.data);
+};
+export const addJobToFav = async (body: any) => {
+  return api.post(path().addToFavJob, body).then((res: any) => res?.data);
+};
+export const removeFromJob = async (body: any) => {
+  return api.post(path().removeFav, body).then((res: any) => res?.data);
 };
 // companies
 

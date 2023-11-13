@@ -19,7 +19,11 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import Logo from "../assets/logo/png/logo-no-background.png";
-import { getUserAuth, getUsersList } from "../services/user-service";
+import {
+  getProfile,
+  getUserAuth,
+  getUsersList,
+} from "../services/user-service";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { clearAllCookies } from "../services/cookie";
@@ -29,6 +33,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import { toTitleCase } from "../services/utils";
 interface SideBarProps {
   children: ReactNode;
 }
@@ -41,6 +46,7 @@ function classNames(...classes: any[]) {
 export default function SideBar({ children }: SideBarProps) {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(undefined);
+  const [overallDetails, setOverallDetails] = useState<any>(null);
   const [navigation, setNavigation] = useState<any[]>([]);
   const onBoard = [
     {
@@ -96,6 +102,13 @@ export default function SideBar({ children }: SideBarProps) {
       scopes: ["JOB_SEEKER", "RECRUITER"],
     },
     {
+      name: "Jobs",
+      href: "/jobs",
+      icon: WorkOutlineOutlinedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER"],
+    },
+    {
       name: "Jobs Posted",
       href: "/recruiter/jobs",
       icon: WorkOutlineOutlinedIcon,
@@ -144,6 +157,9 @@ export default function SideBar({ children }: SideBarProps) {
     if (userdetails?.data?.role === "RECRUITER") {
       setNavigation([...recruiter]);
     }
+    const userProfResp = await getProfile(userdetails?.data?.appUserId);
+    console.log("userProfResp", userProfResp);
+    if (userProfResp) setOverallDetails(userProfResp?.userProfile);
   };
   useEffect(() => {
     getUserDetails();
@@ -447,8 +463,8 @@ export default function SideBar({ children }: SideBarProps) {
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
                     <img
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      className="h-8 w-8 rounded-full bg-gray-50 object-cover"
+                      src={overallDetails?.profilePicture}
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
@@ -456,7 +472,7 @@ export default function SideBar({ children }: SideBarProps) {
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                         aria-hidden="true"
                       >
-                        {user?.firstName}
+                        {user?.firstName ? toTitleCase(user?.firstName) : ""}
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"

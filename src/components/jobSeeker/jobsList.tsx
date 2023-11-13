@@ -1,60 +1,112 @@
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import StarRateIcon from "@mui/icons-material/StarRate";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import React, { useState } from "react";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import React, { useEffect, useState } from "react";
 import Modal from "../shared/modal";
 import AddNewJob from "../recruiter/AddNewJob";
-const data = [
-  {
-    company: {
-      label: "Apollo Hospitals Pvt ltd",
-      logo: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQDxAQERAQERAQFRcPEhARDxUQERgQFREYGBYWFhYYHTQsGB0xGxcWIzEiKCktOi4uFyAzODM4Nyg5MCsBCgoKDg0OGhAQGzcmICUxLi0xNy4wNTEuLzIuMzcxMS83Ny02Ly03KzcvKy03LS4rMTIrLTUtLS0rKy4rNS0tLf/AABEIAMgAyAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAwQCBQYBB//EADcQAAICAQIEBAUCBAYDAQAAAAECAAMRBBIFEyExBiJBURRhcYGRIzJCYqGxFUNScoKSM6LRFv/EABgBAQEBAQEAAAAAAAAAAAAAAAACAQME/8QAJhEBAAIBAgQHAQEAAAAAAAAAAAECERIhA0FhcSIxUYGRscEyE//aAAwDAQACEQMRAD8A+4xEQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBPIkVuoVe5JPsoLH8AQyZwliV01tRON6hj2VvK3/U9ZmwfBwy5/wBp/wDs3BmOSWJRr1dhQMEDjqGCNhgwOGADdDgg9cybTaxLM7T1XoykFXU/zKeojEsi0SsxETFEREBERAREQEREBERAREQEREBERAREwtbapPsCfwIGUr0v57B6hgfsUHX8g/iZ227fQknso7ma3X6SzIuOX29HoQkBq/bPTew69+hyRjrmVWPVF7THksavX6cbkdlc9mrVTa33RQT/AEnmiqosQ7a22ZxstqdAOg/alg6D6DEn0NlTVqatvL9No2ge4x6HOenpILtQ72cukgbCObbjIUd9i+7EfgH6TekJ6y8fhSL1p/QcdQax5Cf5q+zf39iJQfU13AFnXT6usmsN2G8H9oz+9D0O32I7GbjV6nl7OmQ7ivv2znB/P95TB5btXaqmu5jsfHTc38Fg9/Y+vbvjO1meab1jOyXhWv5ysGGy6o7La++Gx3HupHUH5y/Oa11C6TVae9CRXcRpbK85UBsmsjPbDdP+U6WZesRiY5q4VpnNbecPYiJDqREQEREBERAREQEREBERAREQEwsUEEHs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lStSjYUK4yAOWhVMD0wpI+8CkniSk1i1ltStqW1aMyjzUrsyRtJwfOvQ47yzouLJbzsI68jAfJRupQNgFGOfKR+ZjquCVNSKUHL20tpa2GW2VOFBXBPUeRfn07xwjhZo35sLKwULWN+xdu7JG92OTkZ648o6d8h5p+JNyVvsVVR1Vgqku+XI2r26nJA+8yPGFDBDXZzC/LFeF3bjW1g67sY2o3r6SReFUhdgVthG3ZzbCgGRjapbC4wMY7ekyr4bUrBgpLK3MDM7M2/YUzljk+ViPvN2X4UA4yhwFSxmIsJUBcjlPsfOTjo3ToZgfEFGQN2Qdnm6DHMxs6E5PcdgcZ6y5XoKlO4Jg+frk/5j73/LdZhVwypSCqsuAqgLY6jCDC5AOG6YHX2m7GaK9/GQKntWqx1TODlFDEPtOMnPfPXHpPb+OVI+x8qw27gSmV3ny5Abr/xzJ/8AC6drrtba+dy8x9vmOThc4Xr7Yno4dWG3DeG6AkW2ddvbd5vN942M0VxxbdZUqIxSyx6uYcBcojk7RnJ6pjtM24qoturKt+kFIKo753Ln+EdJJVwypXDhSCrNYo3vtDvncQucAnc3p6mTrp1DOwHmsxuPvgYEbGatVT4jqKVlvKzpXY4DAheaoIHUgt9gZLqeOIpsUDzqrso3IQTWMkeViV+4Es18LqXaVVl2qqALY6jagwoIB64+cw/wej/QcebpzH2jmZ34XOBnJjwtzRUu44wW48k/pKjbty7TvUHHfPrNjpdYLC67WV6yNytjPmGQfKSPf19Ji/DKTklT5lCEb2AIXtkZwfrJ0oUMzgYZ8Bj7he39zMnDJmvJNERMQREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERA//Z",
-    },
-    role: "Full Stack Developer",
-    type: "Remote",
-  },
-  {
-    company: {
-      label: "Apollo Hospitals Pvt ltd",
-      logo: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQDxAQERAQERAQFRcPEhARDxUQERgQFREYGBYWFhYYHTQsGB0xGxcWIzEiKCktOi4uFyAzODM4Nyg5MCsBCgoKDg0OGhAQGzcmICUxLi0xNy4wNTEuLzIuMzcxMS83Ny02Ly03KzcvKy03LS4rMTIrLTUtLS0rKy4rNS0tLf/AABEIAMgAyAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAwQCBQYBB//EADcQAAICAQIEBAUCBAYDAQAAAAECAAMRBBIFEyExBiJBURRhcYGRIzJCYqGxFUNScoKSM6LRFv/EABgBAQEBAQEAAAAAAAAAAAAAAAACAQME/8QAJhEBAAIBAgQHAQEAAAAAAAAAAAECERIhA0FhcSIxUYGRscEyE//aAAwDAQACEQMRAD8A+4xEQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBPIkVuoVe5JPsoLH8AQyZwliV01tRON6hj2VvK3/U9ZmwfBwy5/wBp/wDs3BmOSWJRr1dhQMEDjqGCNhgwOGADdDgg9cybTaxLM7T1XoykFXU/zKeojEsi0SsxETFEREBERAREQEREBERAREQEREBERAREwtbapPsCfwIGUr0v57B6hgfsUHX8g/iZ227fQknso7ma3X6SzIuOX29HoQkBq/bPTew69+hyRjrmVWPVF7THksavX6cbkdlc9mrVTa33RQT/AEnmiqosQ7a22ZxstqdAOg/alg6D6DEn0NlTVqatvL9No2ge4x6HOenpILtQ72cukgbCObbjIUd9i+7EfgH6TekJ6y8fhSL1p/QcdQax5Cf5q+zf39iJQfU13AFnXT6usmsN2G8H9oz+9D0O32I7GbjV6nl7OmQ7ivv2znB/P95TB5btXaqmu5jsfHTc38Fg9/Y+vbvjO1meab1jOyXhWv5ysGGy6o7La++Gx3HupHUH5y/Oa11C6TVae9CRXcRpbK85UBsmsjPbDdP+U6WZesRiY5q4VpnNbecPYiJDqREQEREBERAREQEREBERAREQEwsUEEHs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lStSjYUK4yAOWhVMD0wpI+8CkniSk1i1ltStqW1aMyjzUrsyRtJwfOvQ47yzouLJbzsI68jAfJRupQNgFGOfKR+ZjquCVNSKUHL20tpa2GW2VOFBXBPUeRfn07xwjhZo35sLKwULWN+xdu7JG92OTkZ648o6d8h5p+JNyVvsVVR1Vgqku+XI2r26nJA+8yPGFDBDXZzC/LFeF3bjW1g67sY2o3r6SReFUhdgVthG3ZzbCgGRjapbC4wMY7ekyr4bUrBgpLK3MDM7M2/YUzljk+ViPvN2X4UA4yhwFSxmIsJUBcjlPsfOTjo3ToZgfEFGQN2Qdnm6DHMxs6E5PcdgcZ6y5XoKlO4Jg+frk/5j73/LdZhVwypSCqsuAqgLY6jCDC5AOG6YHX2m7GaK9/GQKntWqx1TODlFDEPtOMnPfPXHpPb+OVI+x8qw27gSmV3ny5Abr/xzJ/8AC6drrtba+dy8x9vmOThc4Xr7Yno4dWG3DeG6AkW2ddvbd5vN942M0VxxbdZUqIxSyx6uYcBcojk7RnJ6pjtM24qoturKt+kFIKo753Ln+EdJJVwypXDhSCrNYo3vtDvncQucAnc3p6mTrp1DOwHmsxuPvgYEbGatVT4jqKVlvKzpXY4DAheaoIHUgt9gZLqeOIpsUDzqrso3IQTWMkeViV+4Es18LqXaVVl2qqALY6jagwoIB64+cw/wej/QcebpzH2jmZ34XOBnJjwtzRUu44wW48k/pKjbty7TvUHHfPrNjpdYLC67WV6yNytjPmGQfKSPf19Ji/DKTklT5lCEb2AIXtkZwfrJ0oUMzgYZ8Bj7he39zMnDJmvJNERMQREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERA//Z",
-    },
-    role: "Full Stack Developer",
-    type: "Remote",
-  },
-  {
-    company: {
-      label: "Apollo Hospitals Pvt ltd",
-      logo: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQDxAQERAQERAQFRcPEhARDxUQERgQFREYGBYWFhYYHTQsGB0xGxcWIzEiKCktOi4uFyAzODM4Nyg5MCsBCgoKDg0OGhAQGzcmICUxLi0xNy4wNTEuLzIuMzcxMS83Ny02Ly03KzcvKy03LS4rMTIrLTUtLS0rKy4rNS0tLf/AABEIAMgAyAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAwQCBQYBB//EADcQAAICAQIEBAUCBAYDAQAAAAECAAMRBBIFEyExBiJBURRhcYGRIzJCYqGxFUNScoKSM6LRFv/EABgBAQEBAQEAAAAAAAAAAAAAAAACAQME/8QAJhEBAAIBAgQHAQEAAAAAAAAAAAECERIhA0FhcSIxUYGRscEyE//aAAwDAQACEQMRAD8A+4xEQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBPIkVuoVe5JPsoLH8AQyZwliV01tRON6hj2VvK3/U9ZmwfBwy5/wBp/wDs3BmOSWJRr1dhQMEDjqGCNhgwOGADdDgg9cybTaxLM7T1XoykFXU/zKeojEsi0SsxETFEREBERAREQEREBERAREQEREBERAREwtbapPsCfwIGUr0v57B6hgfsUHX8g/iZ227fQknso7ma3X6SzIuOX29HoQkBq/bPTew69+hyRjrmVWPVF7THksavX6cbkdlc9mrVTa33RQT/AEnmiqosQ7a22ZxstqdAOg/alg6D6DEn0NlTVqatvL9No2ge4x6HOenpILtQ72cukgbCObbjIUd9i+7EfgH6TekJ6y8fhSL1p/QcdQax5Cf5q+zf39iJQfU13AFnXT6usmsN2G8H9oz+9D0O32I7GbjV6nl7OmQ7ivv2znB/P95TB5btXaqmu5jsfHTc38Fg9/Y+vbvjO1meab1jOyXhWv5ysGGy6o7La++Gx3HupHUH5y/Oa11C6TVae9CRXcRpbK85UBsmsjPbDdP+U6WZesRiY5q4VpnNbecPYiJDqREQEREBERAREQEREBERAREQEwsUEEHsQR/SZxAp8OO5FdsFyNrn+ZThl+zAy3Ndc/IsLn/w2HLn/RZgAMf5T6+xGfUkW9TetaM7HyqNx9T9vcypjdFZjGJarilDLYBpm5eotyW6ZrKjoXsX3HQAjqSR3A6ZaXVjToEtpsqA/jUG5GJ6li6jPUk9WAzmXOHUEA2WDFtuC3rtA/ag+QB/JJ9ZdlTblKI4c51Q0XE+MaZ60231HFtR/wDIuQBcucj06Zli/iWnuVq1PP3eXbT5+vzYdE+pIkvEqwz6dSAd1mT09FRm/uB+ZfAiZrEQyItMzu5Hjxf4HUG0/rUGvb8gLEZWz6k46n3B9p1wnN+LU3Gmkfu1TrUwHfaliuT9Aof/ALTpQJt/4j3TwoxxLdoj7exETk9JERAREQEREBERAREQEREBERAREQMGUEEEZB9D1miv0tldipUObQmLmoZsFcHyCtj3GQW2nsUHUDpN/IqqsM7Z/eQfoAoGPyCfvKrbDnempVp4vSx2M3Lfty7Ry2+2f3fVcy/mR3Uq42uqsD3DAEfia6zg+lQFuUqAdcJlP6LHhk8cJ3YG/JIC0ocknpusI/BAT/2kbcVVsikc4juynFQ/3WdvsMn5SnTw/SVjNlSNaTvKbefYPYAdT0GBn5Sw+ks1HS1eVQP8kHzv8rCOgX+UZz6n0l4r7Oeb+6jwTTm/UNrHO5VBqoOMAgnz2KPRT2HyBPrOkmKqAAAMAdAB2mWJF7apdOHTRGHsREl0IiIHzXw140T/AA274jWD4v8AV2bz5/2+TsPebXgfig1cM0Vt/N1Gp1JatEQA2O4sYevQADHWQeF/Cz18Luqv01fxLc7ZuFbt5l8mGBOOvzmuv8J6r4HhmaOZZo2s5um5/KZkssz5bFPQ9B6+s9cxw5mY6uEa4+HV6HxQlianNGoS/S45um2B7vMPLsCnzZnnDPFIt1I0tumv01robaxaFIZR36qeh79PlNJVwbUDS606TRPodTaqKjvrDdbYA2WGSx5Z29Ac/wAXpiQcA4DqV4jpdSdLbTUlTpY12rGosNhQjd1Y4BJ9Pb0k6KbqzZq9F4m1Ol4SLE5lljamxea45iqoK+Vix9c9PoZtvE3HrF1PCLzVqqgzX7tNt/VYjYqjYD5snt9ZW/8AyusPBbNNysaj4g3rWXTzKGHY5wOmfX0m51uj1eq1XCdS2mNPJa43obkfYGCheo/dkD095eaZz3+kxFsfDK3xZz9FxA1pbptTpK23JYAHUlSVYfg/iaLgfijVfA62m+xviq9N8ZRb03NU9QYY9yCR+flNnqeA6lreOMKumrqRKDvTzsKiD69OvviVPEnhHUW6DRNQmNZp9OmmsTeo3VtTtddxODg59fUzK/5+XqTqbrT+JuVpeHqyW6nV6qlHWuvG5v0gXdicBR1lHj3jdhoLbtPVal9VgosWxAeS4YZ5nXsckA+5lLifhbUY4bd8OdR8Ppk01+nTUcmwEJ3V1YZwxPY+ksajw29nC9bVTojpbr2RhXZquez7HRslmJ2nowxmZEcOMT1/W5s63gXEG1FC2vVZSx6bLV2scD9wA9DOOq4hfr31V7a46DQae06dChVCzgjLO7du69PnOw8P3XPp059BosUbOWbFs6KAN2V7Z9pyKcJ1mgs1NVeir1+i1NhvWs2IhRyexD5z2Hp6AyKYzPqq2cQr+J9RYnCLCvEPi9t6KuoqYKwXy+RmQ9T3/InTcX8UrTf8NVRfqr1XmOlKjCIe24k9+o6fMTkR4V1v+EX0fDhbrtX8QtK2J0rwnrnA7Td6rSa3ScS1Gro0vxVWqRFKratbI6KFGd3p0/r8utzFZ27/AImJmFDxf4mTUcP0uqoa1FGsrSxeqWAqrlkYKfp0+k6DhHi1L9Q2mfT6jT2hOciXJhnrHqAPX5fIzmL/AAlrRw+tFRG1VmuGusTeAiAoR1OeoHlzj3M2On4fxDVa86yyhdIadO9FINq27rmDYby/wgsfwImtNOO/MzbLY1+MRzqK7dHqtOmpcVVWWqqguT0DKDlcyv4VY2cQ4ulhLoltW1XO5V6P2B7dh+Jzum8Oa930LWaW7m0alLNRqLdaLdyizOUTdjAH3+s6zwzwu6nXcTtsTbXqHraptyncFD56A9O47zLRWtZxPL9bGZnd0qIAMAAD2AwJnETzOpERAREQEREDneG+IS+nOqsTZUtJ1DAJbuChdxAZlAfp7GXm4yi8wMjo9QRmR2qQ7bCwRgxfb1KP658s9r4Jp1rNIWzlFDSazfaycsrtKhS2B0kuq4XTY+90O87POHZG/TLlMFSMY5j9v9RgUK/EIseoVVPaliXudpTeG09yVsOrYYbmbsT2GMz3T+IEssUKAa7DTy365YX1NYDj06LLA4FpxjC2AjmYK6i5W/WZWsyQ2TllB+smThNClStSjYUK4yAOWhVMD0wpI+8CkniSk1i1ltStqW1aMyjzUrsyRtJwfOvQ47yzouLJbzsI68jAfJRupQNgFGOfKR+ZjquCVNSKUHL20tpa2GW2VOFBXBPUeRfn07xwjhZo35sLKwULWN+xdu7JG92OTkZ648o6d8h5p+JNyVvsVVR1Vgqku+XI2r26nJA+8yPGFDBDXZzC/LFeF3bjW1g67sY2o3r6SReFUhdgVthG3ZzbCgGRjapbC4wMY7ekyr4bUrBgpLK3MDM7M2/YUzljk+ViPvN2X4UA4yhwFSxmIsJUBcjlPsfOTjo3ToZgfEFGQN2Qdnm6DHMxs6E5PcdgcZ6y5XoKlO4Jg+frk/5j73/LdZhVwypSCqsuAqgLY6jCDC5AOG6YHX2m7GaK9/GQKntWqx1TODlFDEPtOMnPfPXHpPb+OVI+x8qw27gSmV3ny5Abr/xzJ/8AC6drrtba+dy8x9vmOThc4Xr7Yno4dWG3DeG6AkW2ddvbd5vN942M0VxxbdZUqIxSyx6uYcBcojk7RnJ6pjtM24qoturKt+kFIKo753Ln+EdJJVwypXDhSCrNYo3vtDvncQucAnc3p6mTrp1DOwHmsxuPvgYEbGatVT4jqKVlvKzpXY4DAheaoIHUgt9gZLqeOIpsUDzqrso3IQTWMkeViV+4Es18LqXaVVl2qqALY6jagwoIB64+cw/wej/QcebpzH2jmZ34XOBnJjwtzRUu44wW48k/pKjbty7TvUHHfPrNjpdYLC67WV6yNytjPmGQfKSPf19Ji/DKTklT5lCEb2AIXtkZwfrJ0oUMzgYZ8Bj7he39zMnDJmvJNERMQREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERA//Z",
-    },
-    role: "Full Stack Developer",
-    type: "Remote",
-  },
-  {
-    company: {
-      label: "Apollo Hospitals Pvt ltd",
-      logo: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQDxAQERAQERAQFRcPEhARDxUQERgQFREYGBYWFhYYHTQsGB0xGxcWIzEiKCktOi4uFyAzODM4Nyg5MCsBCgoKDg0OGhAQGzcmICUxLi0xNy4wNTEuLzIuMzcxMS83Ny02Ly03KzcvKy03LS4rMTIrLTUtLS0rKy4rNS0tLf/AABEIAMgAyAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAwQCBQYBB//EADcQAAICAQIEBAUCBAYDAQAAAAECAAMRBBIFEyExBiJBURRhcYGRIzJCYqGxFUNScoKSM6LRFv/EABgBAQEBAQEAAAAAAAAAAAAAAAACAQME/8QAJhEBAAIBAgQHAQEAAAAAAAAAAAECERIhA0FhcSIxUYGRscEyE//aAAwDAQACEQMRAD8A+4xEQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBPIkVuoVe5JPsoLH8AQyZwliV01tRON6hj2VvK3/U9ZmwfBwy5/wBp/wDs3BmOSWJRr1dhQMEDjqGCNhgwOGADdDgg9cybTaxLM7T1XoykFXU/zKeojEsi0SsxETFEREBERAREQEREBERAREQEREBERAREwtbapPsCfwIGUr0v57B6hgfsUHX8g/iZ227fQknso7ma3X6SzIuOX29HoQkBq/bPTew69+hyRjrmVWPVF7THksavX6cbkdlc9mrVTa33RQT/AEnmiqosQ7a22ZxstqdAOg/alg6D6DEn0NlTVqatvL9No2ge4x6HOenpILtQ72cukgbCObbjIUd9i+7EfgH6TekJ6y8fhSL1p/QcdQax5Cf5q+zf39iJQfU13AFnXT6usmsN2G8H9oz+9D0O32I7GbjV6nl7OmQ7ivv2znB/P95TB5btXaqmu5jsfHTc38Fg9/Y+vbvjO1meab1jOyXhWv5ysGGy6o7La++Gx3HupHUH5y/Oa11C6TVae9CRXcRpbK85UBsmsjPbDdP+U6WZesRiY5q4VpnNbecPYiJDqREQEREBERAREQEREBERAREQEwsUEEHs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lStSjYUK4yAOWhVMD0wpI+8CkniSk1i1ltStqW1aMyjzUrsyRtJwfOvQ47yzouLJbzsI68jAfJRupQNgFGOfKR+ZjquCVNSKUHL20tpa2GW2VOFBXBPUeRfn07xwjhZo35sLKwULWN+xdu7JG92OTkZ648o6d8h5p+JNyVvsVVR1Vgqku+XI2r26nJA+8yPGFDBDXZzC/LFeF3bjW1g67sY2o3r6SReFUhdgVthG3ZzbCgGRjapbC4wMY7ekyr4bUrBgpLK3MDM7M2/YUzljk+ViPvN2X4UA4yhwFSxmIsJUBcjlPsfOTjo3ToZgfEFGQN2Qdnm6DHMxs6E5PcdgcZ6y5XoKlO4Jg+frk/5j73/LdZhVwypSCqsuAqgLY6jCDC5AOG6YHX2m7GaK9/GQKntWqx1TODlFDEPtOMnPfPXHpPb+OVI+x8qw27gSmV3ny5Abr/xzJ/8AC6drrtba+dy8x9vmOThc4Xr7Yno4dWG3DeG6AkW2ddvbd5vN942M0VxxbdZUqIxSyx6uYcBcojk7RnJ6pjtM24qoturKt+kFIKo753Ln+EdJJVwypXDhSCrNYo3vtDvncQucAnc3p6mTrp1DOwHmsxuPvgYEbGatVT4jqKVlvKzpXY4DAheaoIHUgt9gZLqeOIpsUDzqrso3IQTWMkeViV+4Es18LqXaVVl2qqALY6jagwoIB64+cw/wej/QcebpzH2jmZ34XOBnJjwtzRUu44wW48k/pKjbty7TvUHHfPrNjpdYLC67WV6yNytjPmGQfKSPf19Ji/DKTklT5lCEb2AIXtkZwfrJ0oUMzgYZ8Bj7he39zMnDJmvJNERMQREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERA//Z",
-    },
-    role: "Full Stack Developer",
-    type: "Remote",
-  },
-];
+import {
+  addJobToFav,
+  applyJobApp,
+  getAllActiveJobs,
+  getAllCompanies,
+  removeFromJob,
+  removeJobApp,
+} from "../../services/user-service";
+import { useNavigate } from "react-router-dom";
+import { getAppUserId } from "../../services/cookie";
+
 export default function JobsList() {
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<any[]>([]);
+
   const [openAddJob, setOpenJob] = useState(false);
+
+  const navigate = useNavigate();
+  const getJobsData = async () => {
+    const jobsResp = await getAllActiveJobs();
+    console.log("jobsResp seeker", jobsResp);
+    if (jobsResp) setJobs(jobsResp);
+  };
+
+  const getAllCompaniesList = async () => {
+    const compResp = await getAllCompanies();
+    console.log("compResp", compResp);
+    setCompanies(compResp?.companies);
+  };
+
+  const findCompanyLogo = (id: string): string => {
+    const CompanyObj = companies?.find((e) => e.companyId === id);
+    if (CompanyObj && CompanyObj?.companyLogo) return CompanyObj?.companyLogo;
+    else return "";
+  };
+
+  useEffect(() => {
+    getJobsData();
+    getAllCompaniesList();
+  }, []);
+
+  const applyNow = async (jobId: any) => {
+    await applyJobApp({
+      userId: getAppUserId(),
+      jobId: jobId,
+    });
+    await getJobsData();
+  };
+  const fav = async (jobId: any) => {
+    await addJobToFav({
+      userId: getAppUserId(),
+      jobId: jobId,
+    });
+    await getJobsData();
+  };
+  const unfav = async (jobId: any) => {
+    await removeFromJob({
+      userId: getAppUserId(),
+      jobId: jobId,
+    });
+    await getJobsData();
+  };
+
+  const revertJob = async (jobId: any) => {
+    await removeJobApp({
+      userId: getAppUserId(),
+      jobId: jobId,
+    });
+    await getJobsData();
+  };
+
+  const findFav = (job: any) => {
+    const item = job?.favourites?.includes(getAppUserId());
+    console.log("item fav", item);
+    return item;
+  };
+
+  const findApplied = (job: any) => {
+    const item = job?.applicants?.includes(getAppUserId());
+    console.log("item applied", item);
+    return item;
+  };
+
   return (
     <>
       <div className="flex flex-col space-y-4 pt-8">
-        {data?.map((item, idx) => (
+        {jobs?.map((item, idx) => (
           <div
             key={idx}
             className="flex flex-wrap justify-between w-full h-auto overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
           >
             <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left flex">
               <img
-                src={item?.company?.logo}
+                src={findCompanyLogo(item?.company?.value)}
                 alt=""
                 className="mx-auto h-16 w-16 rounded-full border-2 mr-4"
               />
-              <div>
-                <p className="text-lg font-bold text-gray-900 ">{item?.role}</p>
+              <div className="text-start">
+                <p className="text-lg font-bold text-gray-900 ">
+                  {item?.jobTitle}
+                </p>
                 <p className="text-sm font-medium text-gray-600">
                   {item?.company?.label}
                 </p>
@@ -66,18 +118,46 @@ export default function JobsList() {
                   >
                     <circle cx={3} cy={3} r={3} />
                   </svg>
-                  Remote
+                  {item?.jobType}
                 </span>
+                <p className="text-sm text-start font-medium text-gray-600">
+                  <LocationOnOutlinedIcon style={{ fontSize: "0.75rem" }} />{" "}
+                  <span className="text-xs"> {item?.location}</span>
+                </p>
               </div>
             </div>
-            <div className="flex flex-col justify-between">
-              <StarBorderOutlinedIcon className="ml-auto" />
-              <button
-                type="button"
-                className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-              >
-                Apply Now
-              </button>
+            <div className="ml-auto flex flex-col justify-between">
+              {findFav(item) ? (
+                <StarRateIcon
+                  className="ml-auto cursor-pointer"
+                  style={{ color: "#ec4899" }}
+                  onClick={() => unfav(item?.jobId)}
+                />
+              ) : (
+                <StarBorderOutlinedIcon
+                  className="ml-auto cursor-pointer"
+                  onClick={() => fav(item?.jobId)}
+                />
+              )}
+              <VisibilityOutlinedIcon
+                className="ml-auto text-gray-600 cursor-pointer"
+                onClick={() => navigate("/job/" + item?.jobId)}
+              />
+              {!findApplied(item) ? (
+                <button
+                  type="button"
+                  className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                  onClick={() => applyNow(item?.jobId)}
+                >
+                  Apply Now
+                </button>
+              ) : (
+                <button className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                  <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                    Track application
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         ))}
