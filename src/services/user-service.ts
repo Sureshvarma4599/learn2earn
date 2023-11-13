@@ -9,8 +9,8 @@ export type User = {
   lastName?: String;
 };
 
-// const baseUrl: string = "http://localhost:1221";
-const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
+const baseUrl: string = "http://localhost:1221";
+// const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
 const path = () => {
   return {
     signUp: "/api/v1/signup",
@@ -22,6 +22,9 @@ const path = () => {
     getUserProfile: "/api/v1/get/profile",
     getAllCompanies: "/api/v1/get/companies",
     storeFileToS3: "/api/v1/upload/s3",
+    createJob: "/api/v1/create/job",
+    getJobsCreatedByMe: "/api/v1/get/jobsPostedBy",
+    getJobById: "/api/v1/get/jobById",
   };
 };
 
@@ -91,6 +94,21 @@ export const getProfile = async (id: String) => {
   return api.get(path().getUserProfile + "/" + id).then((res) => res.data);
 };
 
+// jobs
+export const createJobOrUpdate = async (body: any) => {
+  body["createdBy"] = getAppUserId();
+  return api.post(path().createJob, body).then((res: any) => res?.data);
+};
+
+export const getJobsCreatedByMe = async () => {
+  return api
+    .get(path().getJobsCreatedByMe + "/" + getAppUserId())
+    .then((res: any) => res?.data);
+};
+
+export const getJobById = async (id: any) => {
+  return api.get(path().getJobById + "/" + id).then((res: any) => res?.data);
+};
 // companies
 
 export const getAllCompanies = async () => {

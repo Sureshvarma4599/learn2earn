@@ -31,13 +31,13 @@ function VerticalStepper({ data }: any) {
                         />
                       </span>
                     </div>
-                    <div className="flex min-w-0 flex-1 justify-between space-x-4 ">
+                    <div className="flex flex-col md:flex-row min-w-0 flex-1 justify-between sm:space-x-4 space-y-2">
                       <div>
                         <p className="font-medium text-gray-900 text-start">
                           {" "}
                           {event.company.label}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 text-start">
                           {event.isPresent
                             ? "Currently working as"
                             : "Worked as"}{" "}

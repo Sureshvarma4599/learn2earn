@@ -21,7 +21,7 @@ function EducationList({ data }: any) {
                         />
                       </span>
                     </div>
-                    <div className="flex min-w-0 flex-1 justify-between space-x-4 ">
+                    <div className="flex flex-col sm:flex-row min-w-0 flex-1 justify-between space-x-4 space-y-2 ">
                       <div>
                         <p className="font-medium text-gray-900 text-start">
                           {" "}

@@ -96,14 +96,14 @@ export default function SideBar({ children }: SideBarProps) {
       scopes: ["JOB_SEEKER", "RECRUITER"],
     },
     {
-      name: "Jobs List",
+      name: "Jobs Posted",
       href: "/recruiter/jobs",
       icon: WorkOutlineOutlinedIcon,
       current: false,
       scopes: ["JOB_SEEKER"],
     },
     {
-      name: "My company",
+      name: "My companies",
       href: "/recruiter/company",
       icon: StoreOutlinedIcon,
       current: false,

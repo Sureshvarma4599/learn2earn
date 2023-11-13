@@ -1,5 +1,8 @@
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
-import React from "react";
+import { PlusIcon } from "@heroicons/react/20/solid";
+import React, { useState } from "react";
+import Modal from "../shared/modal";
+import AddNewJob from "../recruiter/AddNewJob";
 const data = [
   {
     company: {
@@ -35,47 +38,50 @@ const data = [
   },
 ];
 export default function JobsList() {
+  const [openAddJob, setOpenJob] = useState(false);
   return (
-    <div className="flex flex-col space-y-4 pt-8">
-      {data?.map((item, idx) => (
-        <div
-          key={idx}
-          className="flex flex-wrap justify-between w-full h-auto overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
-        >
-          <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left flex">
-            <img
-              src={item?.company?.logo}
-              alt=""
-              className="mx-auto h-16 w-16 rounded-full border-2 mr-4"
-            />
-            <div>
-              <p className="text-lg font-bold text-gray-900 ">{item?.role}</p>
-              <p className="text-sm font-medium text-gray-600">
-                {item?.company?.label}
-              </p>
-              <span className="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
-                <svg
-                  className="h-1.5 w-1.5 fill-green-500"
-                  viewBox="0 0 6 6"
-                  aria-hidden="true"
-                >
-                  <circle cx={3} cy={3} r={3} />
-                </svg>
-                Remote
-              </span>
+    <>
+      <div className="flex flex-col space-y-4 pt-8">
+        {data?.map((item, idx) => (
+          <div
+            key={idx}
+            className="flex flex-wrap justify-between w-full h-auto overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+          >
+            <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left flex">
+              <img
+                src={item?.company?.logo}
+                alt=""
+                className="mx-auto h-16 w-16 rounded-full border-2 mr-4"
+              />
+              <div>
+                <p className="text-lg font-bold text-gray-900 ">{item?.role}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  {item?.company?.label}
+                </p>
+                <span className="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                  <svg
+                    className="h-1.5 w-1.5 fill-green-500"
+                    viewBox="0 0 6 6"
+                    aria-hidden="true"
+                  >
+                    <circle cx={3} cy={3} r={3} />
+                  </svg>
+                  Remote
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col justify-between">
+              <StarBorderOutlinedIcon className="ml-auto" />
+              <button
+                type="button"
+                className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+              >
+                Apply Now
+              </button>
             </div>
           </div>
-          <div className="flex flex-col justify-between">
-            <StarBorderOutlinedIcon className="ml-auto" />
-            <button
-              type="button"
-              className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-            >
-              Apply Now
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }

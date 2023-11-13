@@ -25,6 +25,8 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cookies, setCookie] = useCookies(["authToken", "expiry", "appUserId"]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const inputHandler = (e: any) => {
     const { name, value } = e.target;
     if (name === "email") setEmail(value);
@@ -33,6 +35,7 @@ export default function LoginForm() {
   };
 
   const login = async (e: any) => {
+    setIsLoading(true);
     e.preventDefault();
     const body: User = {
       email,
@@ -58,12 +61,17 @@ export default function LoginForm() {
       });
       setEmail("");
       setPassword("");
-      return navigate("/");
-    } else
+      setTimeout(() => {
+        setIsLoading(false);
+        return navigate("/");
+      }, 2000);
+    } else {
+      setIsLoading(false);
       return toast.error("Login Failed", {
         position: "top-right", // Set the position of the toast
         autoClose: 3000, // Close the toast after 3 seconds (optional)
       });
+    }
   };
   return (
     <RegistrationCard className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
@@ -127,14 +135,24 @@ export default function LoginForm() {
               </div>
             </div>
 
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            {isLoading ? (
+              <div
+                className="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500"
+                role="status"
+                aria-label="loading"
               >
-                Sign in
-              </button>
-            </div>
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : (
+              <div>
+                <button
+                  type="submit"
+                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Sign in
+                </button>
+              </div>
+            )}
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
