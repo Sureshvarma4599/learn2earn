@@ -1,18 +1,18 @@
-import SideBar from "../layouts/SideBar";
-import ProfileHeader from "../components/profile/header";
+import SideBar from "../../layouts/SideBar";
+import ProfileHeader from "../../components/profile/header";
 import styled from "styled-components";
-import Container from "../components/profile/container";
+import Container from "../../components/profile/container";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIphoneOutlinedIcon from "@mui/icons-material/PhoneIphoneOutlined";
-import VerticalStepper from "../components/shared/verticalStepper";
-import ProfileForm from "../components/profile/profileForm";
-import Modal from "../components/shared/modal";
+import VerticalStepper from "../../components/shared/verticalStepper";
+import ProfileForm from "../../components/profile/profileForm";
+import Modal from "../../components/shared/modal";
 import { useEffect, useState } from "react";
-import { getAppUserId } from "../services/cookie";
-import { getProfile } from "../services/user-service";
-import CoursesList from "../components/profile/courseList";
-import EducationList from "../components/profile/educationList";
+import { getAppUserId } from "../../services/cookie";
+import { getProfile } from "../../services/user-service";
+import CoursesList from "../../components/profile/courseList";
+import EducationList from "../../components/profile/educationList";
 
 const Cards = styled.div`
   display: grid;

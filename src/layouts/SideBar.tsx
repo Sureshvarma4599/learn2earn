@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useLayoutEffect } from "react";
 import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import {
   Bars3Icon,
   BellIcon,
@@ -85,6 +86,13 @@ export default function SideBar({ children }: SideBarProps) {
       current: false,
       scopes: ["JOB_SEEKER"],
     },
+    {
+      name: "Calendar",
+      href: "/calendar",
+      icon: CalendarMonthOutlinedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
   ];
   const recruiter = [
     {
@@ -116,7 +124,14 @@ export default function SideBar({ children }: SideBarProps) {
       scopes: ["JOB_SEEKER"],
     },
     {
-      name: "My companies",
+      name: "Calendar",
+      href: "/calendar",
+      icon: CalendarMonthOutlinedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
+    {
+      name: "My Companies",
       href: "/recruiter/company",
       icon: StoreOutlinedIcon,
       current: false,

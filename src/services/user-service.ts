@@ -9,8 +9,8 @@ export type User = {
   lastName?: String;
 };
 
-// const baseUrl: string = "http://localhost:1221";
-const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
+const baseUrl: string = "http://localhost:1221";
+// const baseUrl: string = "https://learn2earn-api-v1.onrender.com";
 const path = () => {
   return {
     signUp: "/api/v1/signup",
@@ -25,6 +25,7 @@ const path = () => {
     createJob: "/api/v1/create/job",
     getJobsCreatedByMe: "/api/v1/get/jobsPostedBy",
     getJobById: "/api/v1/get/jobById",
+    getApplicantsById: "/api/v1/get/applicants",
     getAllActiveJobs: "/api/v1/get/allJobs",
     applyJob: "/api/v1/job/apply",
     removeApply: "/api/v1/job/revert",
@@ -117,6 +118,12 @@ export const getAllActiveJobs = async () => {
 
 export const getJobById = async (id: any) => {
   return api.get(path().getJobById + "/" + id).then((res: any) => res?.data);
+};
+
+export const getApplicantsById = async (id: any) => {
+  return api
+    .get(path().getApplicantsById + "/" + id)
+    .then((res: any) => res?.data);
 };
 
 export const applyJobApp = async (body: any) => {

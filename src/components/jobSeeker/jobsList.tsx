@@ -24,6 +24,7 @@ export default function JobsList() {
   const [openAddJob, setOpenJob] = useState(false);
 
   const navigate = useNavigate();
+
   const getJobsData = async () => {
     const jobsResp = await getAllActiveJobs();
     console.log("jobsResp seeker", jobsResp);
@@ -84,9 +85,11 @@ export default function JobsList() {
   };
 
   const findApplied = (job: any) => {
-    const item = job?.applicants?.includes(getAppUserId());
-    console.log("item applied", item);
-    return item;
+    const item = job?.appliedUsers?.filter(
+      (user: any) => user?.userDetails?.appUserId === getAppUserId(),
+    );
+    if (item?.length > 0) return true;
+    return false;
   };
 
   return (
