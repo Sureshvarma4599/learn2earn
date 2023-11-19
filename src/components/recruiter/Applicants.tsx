@@ -39,14 +39,38 @@ export default function Status({ jobId }: any) {
 
     if (jobresp) {
       setJob(jobresp);
-      setApplied(jobresp?.applicants);
-      setHired(jobresp?.hired);
-      setInterview(jobresp?.interview);
-      setOffered(jobresp?.offered);
-      setRejected(jobresp?.rejected);
-      setScreening(jobresp?.screening);
     }
-    if (jobApplicants) setApplications(jobApplicants);
+    if (jobApplicants) {
+      setApplications(jobApplicants);
+      setApplied(
+        jobApplicants.filter(
+          (e: any) => e?.status?.toLowerCase() === "applied",
+        ),
+      );
+      setHired(
+        jobApplicants.filter((e: any) => e?.status?.toLowerCase() === "hired"),
+      );
+      setInterview(
+        jobApplicants.filter(
+          (e: any) => e?.status?.toLowerCase() === "interview",
+        ),
+      );
+      setOffered(
+        jobApplicants.filter(
+          (e: any) => e?.status?.toLowerCase() === "offered",
+        ),
+      );
+      setRejected(
+        jobApplicants.filter(
+          (e: any) => e?.status?.toLowerCase() === "rejected",
+        ),
+      );
+      setScreening(
+        applications.filter(
+          (e: any) => e?.status?.toLowerCase() === "screening",
+        ),
+      );
+    }
   };
 
   useEffect(() => {
