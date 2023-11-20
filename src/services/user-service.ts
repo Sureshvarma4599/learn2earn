@@ -28,9 +28,11 @@ const path = () => {
     getApplicantsById: "/api/v1/get/applicants",
     getAllActiveJobs: "/api/v1/get/allJobs",
     applyJob: "/api/v1/job/apply",
+    changeApplicationStatus: "api/v1/job/application/status",
     removeApply: "/api/v1/job/revert",
     addToFavJob: "/api/v1/job/fav",
     removeFav: "/api/v1/job/unfav",
+    getMyApplications: "/api/v1/job/myApplications",
   };
 };
 
@@ -129,6 +131,21 @@ export const getApplicantsById = async (id: any) => {
 export const applyJobApp = async (body: any) => {
   return api.post(path().applyJob, body).then((res: any) => res?.data);
 };
+
+export const updateApplicationStatus = async (body: any) => {
+  let payload: any = body;
+  payload["appUserId"] = getAppUserId();
+  return api
+    .post(path().changeApplicationStatus, payload)
+    .then((res: any) => res?.data);
+};
+
+export const myApplications = async () => {
+  return api
+    .get(path().getMyApplications + "/" + getAppUserId())
+    .then((res: any) => res?.data);
+};
+
 export const removeJobApp = async (body: any) => {
   return api.post(path().removeApply, body).then((res: any) => res?.data);
 };

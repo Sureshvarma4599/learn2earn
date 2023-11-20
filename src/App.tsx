@@ -22,6 +22,7 @@ import Jobs from "./pages/jobSeeker/Jobs";
 import ViewJob from "./pages/recruiter/ViewJob";
 import Calendar from "./pages/Calendar";
 import TrackApplicants from "./pages/recruiter/TrackApplicants";
+import MyApplications from "./pages/jobSeeker/MyApplications";
 const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -45,6 +46,7 @@ function App() {
             <Route path="/recruiter/company" element={<RecruiterCompany />} />
             <Route path="/companies" element={<Companies />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/my-applications" element={<MyApplications />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/job/:jobId" element={<ViewJob />} />
             <Route path="/recruiter/job/:jobId" element={<ViewJob />} />

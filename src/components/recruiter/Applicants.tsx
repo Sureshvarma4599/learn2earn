@@ -4,6 +4,7 @@ import {
   getAllCompanies,
   getApplicantsById,
   getJobById,
+  updateApplicationStatus,
 } from "../../services/user-service";
 import Modal from "../shared/modal";
 import ViewJobDialog from "./ViewJob";
@@ -30,51 +31,53 @@ export default function Status({ jobId }: any) {
 
   const [applications, setApplications] = useState([]);
 
+  const getApplications = async () => {
+    const jobApplicants = await getApplicantsById(jobId);
+    console.log("jobApplicants", jobApplicants);
+    if (jobApplicants) {
+      setApplications(jobApplicants);
+      const appliedData = jobApplicants.filter(
+        (e: any) => e?.status?.toLowerCase() === "applied",
+      );
+      const hiredData = jobApplicants.filter(
+        (e: any) => e?.status?.toLowerCase() === "hired",
+      );
+      const interviewData = jobApplicants.filter(
+        (e: any) => e?.status?.toLowerCase() === "interview",
+      );
+      const offeredData = jobApplicants.filter(
+        (e: any) => e?.status?.toLowerCase() === "offered",
+      );
+      const rejectedData = jobApplicants.filter(
+        (e: any) => e?.status?.toLowerCase() === "rejected",
+      );
+      const screeningData = jobApplicants.filter(
+        (e: any) => e?.status?.toLowerCase() === "screening",
+      );
+      setApplied(appliedData);
+      setHired(hiredData);
+      setInterview(interviewData);
+      setOffered(offeredData);
+      setRejected(rejectedData);
+      setScreening(screeningData);
+    }
+  };
+
+  console.log("screening res", screening);
+
   const getJobByIdResp = async () => {
     const jobresp: any = await getJobById(jobId);
-    const jobApplicants = await getApplicantsById(jobId);
 
     console.log("jobrespbyid", jobresp);
-    console.log("jobApplicants", jobApplicants);
 
     if (jobresp) {
       setJob(jobresp);
-    }
-    if (jobApplicants) {
-      setApplications(jobApplicants);
-      setApplied(
-        jobApplicants.filter(
-          (e: any) => e?.status?.toLowerCase() === "applied",
-        ),
-      );
-      setHired(
-        jobApplicants.filter((e: any) => e?.status?.toLowerCase() === "hired"),
-      );
-      setInterview(
-        jobApplicants.filter(
-          (e: any) => e?.status?.toLowerCase() === "interview",
-        ),
-      );
-      setOffered(
-        jobApplicants.filter(
-          (e: any) => e?.status?.toLowerCase() === "offered",
-        ),
-      );
-      setRejected(
-        jobApplicants.filter(
-          (e: any) => e?.status?.toLowerCase() === "rejected",
-        ),
-      );
-      setScreening(
-        applications.filter(
-          (e: any) => e?.status?.toLowerCase() === "screening",
-        ),
-      );
     }
   };
 
   useEffect(() => {
     getJobByIdResp();
+    getApplications();
   }, []);
 
   const handleStatus = (e: any) => {
@@ -83,6 +86,18 @@ export default function Status({ jobId }: any) {
 
   const closeDialog = () => {
     setOpenJob(false);
+  };
+
+  const updateApplicantStatus = async (
+    status: string,
+    applicationId: string,
+  ) => {
+    const updateUser = await updateApplicationStatus({
+      status: status,
+      applicationId: applicationId,
+    });
+    console.log("updateUser", updateUser);
+    await getApplications();
   };
 
   const getCount = (status: string) => {
@@ -196,6 +211,9 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={() =>
+                      updateApplicantStatus("screening", person?.applicationId)
+                    }
                   >
                     Shortlist
                   </button>
@@ -204,6 +222,9 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={() =>
+                      updateApplicantStatus("interview", person?.applicationId)
+                    }
                   >
                     Interview
                   </button>
@@ -212,6 +233,9 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={() =>
+                      updateApplicantStatus("offer", person?.applicationId)
+                    }
                   >
                     Offer
                   </button>
@@ -220,6 +244,9 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={() =>
+                      updateApplicantStatus("hired", person?.applicationId)
+                    }
                   >
                     Hire
                   </button>
@@ -227,6 +254,9 @@ export default function Status({ jobId }: any) {
                 <button
                   type="button"
                   className="rounded bg-red-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  onClick={() =>
+                    updateApplicantStatus("rejected", person?.applicationId)
+                  }
                 >
                   Reject
                 </button>

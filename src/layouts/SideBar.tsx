@@ -3,6 +3,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import {
   Bars3Icon,
   BellIcon,
@@ -87,6 +88,13 @@ export default function SideBar({ children }: SideBarProps) {
       scopes: ["JOB_SEEKER"],
     },
     {
+      name: "My Applications",
+      href: "/my-applications",
+      icon: FormatListBulletedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
+    },
+    {
       name: "Calendar",
       href: "/calendar",
       icon: CalendarMonthOutlinedIcon,
@@ -122,6 +130,13 @@ export default function SideBar({ children }: SideBarProps) {
       icon: WorkOutlineOutlinedIcon,
       current: false,
       scopes: ["JOB_SEEKER"],
+    },
+    {
+      name: "My Applications",
+      href: "/my-applications",
+      icon: FormatListBulletedIcon,
+      current: false,
+      scopes: ["JOB_SEEKER", "RECRUITER"],
     },
     {
       name: "Calendar",
