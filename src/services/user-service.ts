@@ -33,6 +33,8 @@ const path = () => {
     addToFavJob: "/api/v1/job/fav",
     removeFav: "/api/v1/job/unfav",
     getMyApplications: "/api/v1/job/myApplications",
+    addEvent: "/api/v1/events/add",
+    getAllEvents: "/api/v1/events",
   };
 };
 
@@ -100,6 +102,15 @@ export const createOrUpdateProfile = async (body: any) => {
 
 export const getProfile = async (id: String) => {
   return api.get(path().getUserProfile + "/" + id).then((res) => res.data);
+};
+
+// events
+export const createOrUpdateEvent = async (body: any) => {
+  return api.post(path().addEvent + "/", body).then((res) => res.data);
+};
+
+export const getEvents = async (id: String) => {
+  return api.get(path().getAllEvents + "/" + id).then((res) => res.data);
 };
 
 // jobs

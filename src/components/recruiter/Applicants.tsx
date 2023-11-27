@@ -8,6 +8,7 @@ import {
 } from "../../services/user-service";
 import Modal from "../shared/modal";
 import ViewJobDialog from "./ViewJob";
+import Interview from "./interview";
 const tabs = [
   { name: "Applied", value: "applied" },
   { name: "Shortlist", value: "screening" },
@@ -30,6 +31,10 @@ export default function Status({ jobId }: any) {
   const [rejected, setRejected] = useState([]);
 
   const [applications, setApplications] = useState([]);
+
+  const [openInterview, setOpenInterview] = useState(false);
+
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
 
   const getApplications = async () => {
     const jobApplicants = await getApplicantsById(jobId);
@@ -88,16 +93,22 @@ export default function Status({ jobId }: any) {
     setOpenJob(false);
   };
 
-  const updateApplicantStatus = async (
-    status: string,
-    applicationId: string,
-  ) => {
+  const updateApplicantStatus = async (status: string, person: any) => {
+    console.log("person", person);
+    setSelectedApplicant(person);
+    if (status === "interview") {
+      setOpenInterview(true);
+    }
     const updateUser = await updateApplicationStatus({
       status: status,
-      applicationId: applicationId,
+      applicationId: person?.applicationId,
     });
     console.log("updateUser", updateUser);
     await getApplications();
+  };
+
+  const closePopup = () => {
+    setOpenInterview(false);
   };
 
   const getCount = (status: string) => {
@@ -124,6 +135,14 @@ export default function Status({ jobId }: any) {
         {openJob ? (
           <Modal>
             <ViewJobDialog jobData={job} closeDialog={closeDialog} />
+          </Modal>
+        ) : null}
+        {openInterview ? (
+          <Modal>
+            <Interview
+              closePopup={closePopup}
+              selectedApplicant={selectedApplicant}
+            />
           </Modal>
         ) : null}
         <div className="md:flex md:items-center md:justify-between">
@@ -211,9 +230,7 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={() =>
-                      updateApplicantStatus("screening", person?.applicationId)
-                    }
+                    onClick={() => updateApplicantStatus("screening", person)}
                   >
                     Shortlist
                   </button>
@@ -222,9 +239,7 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={() =>
-                      updateApplicantStatus("interview", person?.applicationId)
-                    }
+                    onClick={() => updateApplicantStatus("interview", person)}
                   >
                     Interview
                   </button>
@@ -233,9 +248,7 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={() =>
-                      updateApplicantStatus("offer", person?.applicationId)
-                    }
+                    onClick={() => updateApplicantStatus("offer", person)}
                   >
                     Offer
                   </button>
@@ -244,9 +257,7 @@ export default function Status({ jobId }: any) {
                   <button
                     type="button"
                     className="rounded bg-lime-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={() =>
-                      updateApplicantStatus("hired", person?.applicationId)
-                    }
+                    onClick={() => updateApplicantStatus("hired", person)}
                   >
                     Hire
                   </button>
@@ -254,9 +265,7 @@ export default function Status({ jobId }: any) {
                 <button
                   type="button"
                   className="rounded bg-red-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  onClick={() =>
-                    updateApplicantStatus("rejected", person?.applicationId)
-                  }
+                  onClick={() => updateApplicantStatus("rejected", person)}
                 >
                   Reject
                 </button>
