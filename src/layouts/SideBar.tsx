@@ -81,13 +81,6 @@ export default function SideBar({ children }: SideBarProps) {
       scopes: ["JOB_SEEKER"],
     },
     {
-      name: "Companies",
-      href: "/companies",
-      icon: StoreOutlinedIcon,
-      current: false,
-      scopes: ["JOB_SEEKER"],
-    },
-    {
       name: "My Applications",
       href: "/my-applications",
       icon: FormatListBulletedIcon,
@@ -117,26 +110,19 @@ export default function SideBar({ children }: SideBarProps) {
       current: false,
       scopes: ["JOB_SEEKER", "RECRUITER"],
     },
-    {
-      name: "Jobs",
-      href: "/jobs",
-      icon: WorkOutlineOutlinedIcon,
-      current: false,
-      scopes: ["JOB_SEEKER"],
-    },
+    // {
+    //   name: "Jobs",
+    //   href: "/jobs",
+    //   icon: WorkOutlineOutlinedIcon,
+    //   current: false,
+    //   scopes: ["JOB_SEEKER"],
+    // },
     {
       name: "Jobs Posted",
       href: "/recruiter/jobs",
       icon: WorkOutlineOutlinedIcon,
       current: false,
       scopes: ["JOB_SEEKER"],
-    },
-    {
-      name: "My Applications",
-      href: "/my-applications",
-      icon: FormatListBulletedIcon,
-      current: false,
-      scopes: ["JOB_SEEKER", "RECRUITER"],
     },
     {
       name: "Calendar",
